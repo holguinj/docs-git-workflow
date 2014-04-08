@@ -1,0 +1,29 @@
+Feature Branch Workflow
+* Setting up
+** Clone the puppetlabs/puppet-docs repo
+   git clone https://github.com/puppetlabs/puppet-docs/ --origin upstream
+** Fork the project and add your private remote (optional)
+   git remote add <NAME> https://github.com/<NAME>/puppet-docs
+* Publishing a single, small change
+** Update your copy of the repo
+   git up
+** Edit the file/s
+** Add (stage) the file/s
+   git add file1 file2
+** Commit the changes
+   git commit -m "Corrected capitalization in two files"
+   (note: the above two steps can be combined with `git commit -am "Message"`, but that risks committing extra files unintentionally)
+** Push to master
+   git push upstream master
+* Publishing a larger section of work
+** Create a feature branch and check it out
+   git branch facter3
+   git checkout facter3
+** Edit, add, and commit your changes until you're ready to publish
+** Either push your changes to github and submit a pull request -or-
+** Merge your changes into master
+   git checkout master
+   git up
+   git merge facter3
+/  git merge facter3 --squash && git commit -am "Added docs for Facter 3"
+   git push
