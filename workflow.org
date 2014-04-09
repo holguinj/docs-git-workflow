@@ -27,3 +27,6 @@ Feature Branch Workflow
    git merge facter3
 /  git merge facter3 --squash && git commit -am "Added docs for Facter 3"
    git push
+* Commit Messages
+  http://tbaggery.com/2008/04/19/a-note-about-git-commit-messages.html
+*
