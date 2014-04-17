@@ -74,11 +74,13 @@ Let's look at a simple example: fixing a typo in `index.markdown`. Here's how it
   2. Edit `index.markdown` your text editor of choice.
   3. `git status` should show something like this:
 
+```
       Changes not staged for commit:
         (use "git add <file>..." to update what will be committed)
         (use "git checkout -- <file>..." to discard changes in working directory)
 
         modified:   index.markdown
+```
 
   4. Use `git add index.markdown` to stage the file so that it will be included in the next commit.
   5. Commit the change with `git commit -m "Fixed a typo in the index`.
@@ -87,7 +89,17 @@ Let's look at a simple example: fixing a typo in `index.markdown`. Here's how it
 It doesn't get much simpler than that, and often that's all you need. The commit message in step 5 above (marked with the `-m` or `--message` flag)
 
 ### Branching
+
+[GitHub Flow](https://guides.github.com/overviews/flow/) mandates that all work be done on a branch other than master, but that's not really practical for us. You should at least *consider* making a new branch for each task, but it's not required for quick changes.
+
 ### Committing
+
+We've historically been pretty lax when it comes to commit messages, but there are a few things that you really should keep in mind:
+
+  1. Commit messages are not only open to the public, they're proudly displayed in a sidebar on the docs site. Keep that in mind when writing them.
+  2. Give a clear indication of what the commit relates to up front. The first 50 characters or so of a commit message are the most important, because that's sometimes all you can see when you're looking through the history of a branch.
+  3. If the commit resolves a ticket, reference the ticket number somewhere in the commit message.
+
 ### Merging
 ### Publishing
 
