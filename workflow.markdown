@@ -11,13 +11,14 @@ The classic GitHub Flow is great for more involved docs projects, but it's overk
 
 ## General Advice
 
-Git is complicated, and new users pretty much always find it frustrating at first, if not downright scary. That said, I think that the all-too-common approach of "just teach people the five basic commands and hope for the best" actually does more harm than good. Taking the time early on to learn about the way that git organizes commits (the impressively-named Directed Acyclic Graph) will not only make the rest of the process vastly more intuitive, it will save you loads of time and frustration in the future.
+Git is complicated, and new users pretty much always find it frustrating at first, if not downright scary. That said, I think that the all-too-common approach of "just teach people the five basic commands and hope for the best" actually does more harm than good. Taking the time early on to learn about the way that git organizes commits (the impressively-named directed acyclic graph) will not only make the rest of the process vastly more intuitive, it will save you loads of time and frustration in the future.
 
 There are countless tutorials and books out there, and you may find some more suited to your learning style than others. Several of us on the team like O'Reilly's [Version Control with Git](http://www.amazon.com/Version-Control-Git-collaborative-development/dp/1449316387), and recommend it for people who are willing to put in a bit of time.
 
 It's not a tutorial in itself, but one way that you can build up your mental model of git processes is to use a tool like [Explain Git With D3](http://onlywei.github.io/explain-git-with-d3/), which lets you type in git commands and see how they affect the graph immediately.
 
 ## Setting Up
+
 ### Install git
 
   1. [Download git](http://git-scm.com/downloads) and run the installer.
@@ -46,7 +47,8 @@ While you're editing `~/.gitconfig`, you should probably add the following lines
 These settings change some potentially annoying behavior of `git pull` in two important ways:
 
   1. `git pull` will not merge unless it can fast forward, i.e., unless there are no local changes that haven't been published.
-  2. If there are local changes, it will try to rebase them to keep the history nice and neat.
+  2. If there are local changes, it will try to [rebase](http://git-scm.com/book/ch3-6.html) them to keep the history nice and neat.
+  3. If you have local changes that conflict with the master branch, you'll have to resolve those [merge conflicts](#merge-conflicts)
 
 Neither of these settings will necessarily prevent merge conflicts, which this document covers in a later section.
 
@@ -74,13 +76,11 @@ Let's look at a simple example: fixing a typo in `index.markdown`. Here's how it
   2. Edit `index.markdown` your text editor of choice.
   3. `git status` should show something like this:
 
-```
-      Changes not staged for commit:
-        (use "git add <file>..." to update what will be committed)
-        (use "git checkout -- <file>..." to discard changes in working directory)
+          Changes not staged for commit:
+            (use "git add <file>..." to update what will be committed)
+            (use "git checkout -- <file>..." to discard changes in working directory)
 
-        modified:   index.markdown
-```
+            modified:   index.markdown
 
   4. Use `git add index.markdown` to stage the file so that it will be included in the next commit.
   5. Commit the change with `git commit -m "Fixed a typo in the index`.
@@ -88,23 +88,46 @@ Let's look at a simple example: fixing a typo in `index.markdown`. Here's how it
 
 It doesn't get much simpler than that, and often that's all you need. The commit message in step 5 above (marked with the `-m` or `--message` flag)
 
+### Committing
+
+We've historically been pretty lax when it comes to commit messages, but there are a few things that you should keep in mind:
+
+  1. Commit messages are not only open to the public, they're proudly displayed in a sidebar on the docs site. Remember that when you're writing them.
+  2. Give a clear indication of what the commit relates to up front. The first 50 characters or so of a commit message are the most important, because sometimes that's all you can see when you're looking through the history of a branch.
+  3. If the commit resolves a ticket, reference the ticket number somewhere in the commit message.
+
 ### Branching
 
 [GitHub Flow](https://guides.github.com/overviews/flow/) mandates that all work be done on a branch other than master, but that's not really practical for us. You should at least *consider* making a new branch for each task, but it's not required for quick changes.
 
-### Committing
+It's a good idea to keep your branch online by pushing it to either your own fork, the puppetlabs/puppet-docs repo, or (if you're working on sensitive material) the puppetlabs/puppet-docs-private repo.
 
-We've historically been pretty lax when it comes to commit messages, but there are a few things that you really should keep in mind:
+### Merging/Pull Requests
 
-  1. Commit messages are not only open to the public, they're proudly displayed in a sidebar on the docs site. Keep that in mind when writing them.
-  2. Give a clear indication of what the commit relates to up front. The first 50 characters or so of a commit message are the most important, because that's sometimes all you can see when you're looking through the history of a branch.
-  3. If the commit resolves a ticket, reference the ticket number somewhere in the commit message.
+You are welcome to merge your work into `master` yourself if you think it's ready.
 
-### Merging
-### Publishing
+  1. Make sure all branches are current: `git up` 
+  2. Switch to the master branch: `git checkout master`
+  3. Merge your branch: `git merge <BRANCH>` (this might trigger a [merge conflict](#merge-conflicts))
+  4. Push your updated master branch: `git push`
+
+If you don't want it to go live until somebody else has had a look at it, here's what you should do:
+
+  1. Make sure all branches are current: `git up` 
+  2. Switch to your branch: `git checkout <BRANCH>` 
+  3. Rebase your branch against the master branch: `git rebase upstream/master` (this might trigger a [merge conflict](#merge-conflicts))
+  4. Upload your branch: `git push <BRANCH>`
+  5. [Create a pull request](https://help.github.com/articles/creating-a-pull-request) targeting the `master` branch.
+  6. In the body of the pull request, @tag at least one person and let them know what you need (technical review, copy-editing, etc.). Politely mention any time constraints you might be under.
 
 ## Less-Than-Ideal Situations
+
+From time to time, you will inevitably find yourself in a shallow pit of git-related despair.
+
 ### Merge Conflicts
+
+
+
 ### Amending Commits
 ### Basing Work on Content That's Still Being Updated
 ### Rejected Commits
