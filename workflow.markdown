@@ -29,6 +29,12 @@ It's not a tutorial in itself, but one way that you can build up your mental mod
   2. Follow GitHub's [instructions for generating an SSH key](https://help.github.com/articles/generating-ssh-keys).
   3. Download the [GitHub for Mac](https://mac.github.com/release-notes.html) application if you prefer a graphical interface. Using the app is explained in more detail in the [quickstart guide](quickstart.markdown).
 
+### Install git-up
+
+Keeping your local repository up to date is a must, and even though `git pull` is usually just fine, it tends to error out under the least bit of provocation. The [git-up](https://github.com/aanand/git-up) gem provides an alternate `git up` command that will reliably update your local repository without complaining about your unsaved work or introducing unnecessary commits. It also has the nice benefit of updating all of the local branches, not just the one that's currently checked out. To install it, just type the following at the command line:
+
+    sudo gem install git-up
+
 ### Helpful Aliases and Settings
 
 You can save yourself a lot of typing at the command line and build better habits by setting up git **aliases** for common commands---or even sequences of commands. Aliases are defined in `~/.gitconfig` in the `[alias]` section like so:
@@ -60,17 +66,26 @@ These settings change some potentially annoying behavior of `git pull` in two im
   2. If there are local changes, it will try to [rebase](https://www.atlassian.com/git/tutorial/rewriting-git-history#!rebase) them to keep the history nice and neat.
   3. If you have local changes that conflict with the master branch, you'll have to resolve those [merge conflicts](#merge-conflicts)
 
-Neither of these settings will necessarily prevent merge conflicts, which this document covers in a later section.
+Neither of these settings will necessarily prevent merge conflicts, which this document covers in a later section. We also recommend a few more settings for the merge and push sections:
+
+    [merge]
+      defaultToUpstream = true
+    [push]
+      default = upstream
 
 ### Clone the puppetlabs/puppet-docs repository
 
 You should run `git clone https://github.com/puppetlabs/puppet-docs/ --origin upstream` to make sure that the puppetlabs repository is named `upstream` rather than the ambiguous `origin`.
 
+Related reading:
+
+  * Atlassian [git clone](https://www.atlassian.com/git/tutorial/git-basics#!clone)
+
 ### Add your own remote (optional)
 
 It's not required, but you should consider forking the puppet-docs repo and adding a remote for it. Just click the "Fork" button at the top of the [GitHub page for the repo](https://github.com/puppetlabs/puppet-docs) and then run the following command:
 
-    git remote add myname https://github.com/myname/puppet-docs
+    git remote add <YOUR USERNAME> https://github.com/<YOUR USERNAME>/puppet-docs
 
 Once you do that, you can push your commits to `myname` instead of `upstream` and they won't be deployed to the site.
 
@@ -96,6 +111,12 @@ Let's look at a simple example: fixing a typo in `index.markdown`. Here's how it
 
 It doesn't get much simpler than that, and often that's all you need. The commit message in step 5 above (marked with the `-m` or `--message` flag)
 
+Further reading:
+
+  * Atlassian: [git add](https://www.atlassian.com/git/tutorial/git-basics#!add)
+  * Atlassian: [git commit](https://www.atlassian.com/git/tutorial/git-basics#!commit)
+  * Atlassian: [git status](https://www.atlassian.com/git/tutorial/git-basics#!status)
+
 ### Committing
 
 We've historically been pretty lax when it comes to commit messages, but there are a few things that you should keep in mind:
@@ -108,11 +129,18 @@ We've historically been pretty lax when it comes to commit messages, but there a
 
 [GitHub Flow](https://guides.github.com/overviews/flow/) mandates that all work be done on a branch other than master, but that's not really practical for us. You should at least *consider* making a new branch for each task, but it's not required for quick changes.
 
+To create a new branch based on the current (i.e., HEAD) commit, just use the `git branch <BRANCH NAME>` command. You can also create the branch and check it out in one command with `git checkout -b <BRANCH NAME>`. Choose a descriptive name for your branch, something like `hiera186` or `razor2`.
+
 It's a good idea to keep your branch online by pushing it to either your own fork, the puppetlabs/puppet-docs repo, or (if you're working on sensitive material) the puppetlabs/puppet-docs-private repo.
+
+Related reading:
+
+  * Atlassian: [Git Branches](https://www.atlassian.com/git/tutorial/git-branches)
+  * Pro Git: [Basic Branching](http://git-scm.com/book/en/Git-Branching-Basic-Branching-and-Merging#Basic-Branching)
 
 ### Merging/Pull Requests
 
-You are welcome to merge your work into `master` yourself if you think it's ready.
+You are welcome to merge your own work into master yourself when you think it's ready. This is a bit of a departure from the GitHub Flow workflow, but the fact of the matter is that most of the changes we make are pretty minor and it would be unwise to require secondary review for everything. To merge another branch into master from the command line, follow these steps:
 
   1. Make sure all branches are current: `git up`
   2. Switch to the master branch: `git checkout master`
@@ -125,17 +153,37 @@ If you don't want it to go live until somebody else has had a look at it, here's
   2. Switch to your branch: `git checkout <BRANCH>`
   3. Rebase your branch against the master branch: `git rebase upstream/master` (this might trigger a [merge conflict](#merge-conflicts))
   4. Upload your branch: `git push <BRANCH>`
-  5. [Create a pull request](https://help.github.com/articles/creating-a-pull-request) targeting the `master` branch.
+  5. [Create a pull request](https://help.github.com/articles/creating-a-pull-request) targeting the master branch.
   6. In the body of the pull request, @tag at least one person and let them know what you need (technical review, copy-editing, etc.). Politely mention any time constraints you might be under.
+
+Related reading:
+  
+  * Atlassian: [git merge](https://www.atlassian.com/git/tutorial/git-branches#!merge)
 
 ## Less-Than-Ideal Situations
 
-From time to time, you will inevitably find yourself in a shallow pit of git-related despair.
+From time to time, you will inevitably find yourself in a shallow pit of git-related despair. Thankfully, there's always a way out.
 
 ### Merge Conflicts
 
+When you're combining two branches with `git merge` or `git rebase`, git usually doesn't complain *unless* the branches have conflicting versions of one or more files. It's important to note that "conflicting" doesn't just mean "different," it means "different because of two (or more) divergent editing histories." In general, you get merge conflicts after two people have been editing the same file concurrently.
 
+Merge conflicts are common enough that a number of tools have been developed just to resolve them. Some of us on the team use a commercial merge tool called [Kaleidoscope](http://www.kaleidoscopeapp.com/) which has a pretty nice interface and makes the process almost painless. You can also resolve merge conflicts manually, but I wouldn't recommend it.
 
-### Amending Commits
+Related reading:
+  * Pro Git: [Basic Merge Conflicts](http://git-scm.com/book/en/Git-Branching-Basic-Branching-and-Merging#Basic-Merge-Conflicts)
+  * Blog: [Integrating Kaleidoscope With Git](http://blog.juerggutknecht.ch/integrating-kaleidoscope-with-git/)
+
+### Amending Commits and Rewriting History
+
+**Important:** You can amend commits all you want *if and only if* those commits have not been pushed to puppetlabs/puppet-docs.
+
+If you made a typo in your last commit message or forgot to add a file, you can use `git commit --amend` to go back and fix it. If you're comfortable with [interactive rebasing](http://git-scm.com/book/en/Git-Tools-Rewriting-History#Changing-Multiple-Commit-Messages) then you're welcome to use it, but it shouldn't be strictly necessary.
+
+Related reading:
+  
+  * Atlassian: [Rewriting Git History](https://www.atlassian.com/git/tutorial/rewriting-git-history)
+  * Pro Git: [Rewriting History](http://git-scm.com/book/en/Git-Tools-Rewriting-History)
+
 ### Basing Work on Content That's Still Being Updated
 ### Rejected Commits
