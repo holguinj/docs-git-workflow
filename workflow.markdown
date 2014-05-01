@@ -35,6 +35,10 @@ Keeping your local repository up to date is a must, and even though `git pull` i
 
     sudo gem install git-up
 
+### Install hub
+
+GitHub has a handy tool called [hub](https://github.com/github/hub) that wraps around the normal git program and provides some GitHub-specific functions. If you install it, you can use new commands like `git fork`, `git pull-request`. It also enables a general shorthand for GitHub repos, so that you can replace `git clone https://github.com/puppetlabs/puppet-docs` with `git clone puppetlabs/puppet-docs`.
+
 ### Helpful Aliases and Settings
 
 You can save yourself a lot of typing at the command line and build better habits by setting up git **aliases** for common commands---or even sequences of commands. Aliases are defined in `~/.gitconfig` in the `[alias]` section like so:
@@ -75,7 +79,10 @@ Neither of these settings will necessarily prevent merge conflicts, which this d
 
 ### Clone the puppetlabs/puppet-docs repository
 
-You should run `git clone https://github.com/puppetlabs/puppet-docs/ --origin upstream` to make sure that the puppetlabs repository is named `upstream` rather than the ambiguous `origin`.
+You should run `git clone https://github.com/puppetlabs/puppet-docs/ --origin upstream` to make sure that the puppetlabs repository is named `upstream` rather than the ambiguous `origin`. The difference between the two is this:
+
+  * Git names the "origin" remote for you based on the source that you cloned from. It might be the original repository, or it might be another fork.
+  * On the other hand, "upstream" is taken to mean *the repository accepted as authoritative*, in our case, that's `https://github.com/puppetlabs/puppet-docs`.
 
 Related reading:
 
@@ -83,13 +90,11 @@ Related reading:
 
 ### Add your own remote (optional)
 
-It's not required, but you should consider forking the puppet-docs repo and adding a remote for it. Just click the "Fork" button at the top of the [GitHub page for the repo](https://github.com/puppetlabs/puppet-docs) and then run the following command:
+It's not required, but you should consider forking the puppet-docs repo and adding a remote for it. If you installed [hub](https://github.com/github/hub), all you need to do is type `git fork`. Otherwise, click the "Fork" button at the top of the [GitHub page for the repo](https://github.com/puppetlabs/puppet-docs) and then run the following command:
 
     git remote add <YOUR USERNAME> https://github.com/<YOUR USERNAME>/puppet-docs
 
 Once you do that, you can push your commits to `myname` instead of `upstream` and they won't be deployed to the site.
-
-**Note:** This is one of the areas where the GUI app falls short. If you want to use multiple remotes, you'll have to use the command line (at least to push).
 
 ## Writing and Publishing
 
@@ -157,7 +162,7 @@ If you don't want it to go live until somebody else has had a look at it, here's
   6. In the body of the pull request, @tag at least one person and let them know what you need (technical review, copy-editing, etc.). Politely mention any time constraints you might be under.
 
 Related reading:
-  
+
   * Atlassian: [git merge](https://www.atlassian.com/git/tutorial/git-branches#!merge)
 
 ## Less-Than-Ideal Situations
@@ -168,9 +173,28 @@ From time to time, you will inevitably find yourself in a shallow pit of git-rel
 
 When you're combining two branches with `git merge` or `git rebase`, git usually doesn't complain *unless* the branches have conflicting versions of one or more files. It's important to note that "conflicting" doesn't just mean "different," it means "different because of two (or more) divergent editing histories." In general, you get merge conflicts after two people have been editing the same file concurrently.
 
-Merge conflicts are common enough that a number of tools have been developed just to resolve them. Some of us on the team use a commercial merge tool called [Kaleidoscope](http://www.kaleidoscopeapp.com/) which has a pretty nice interface and makes the process almost painless. You can also resolve merge conflicts manually, but I wouldn't recommend it.
+Merge conflicts are common enough that a number of tools have been developed just to resolve them. Some of us on the team use a commercial merge tool called [Kaleidoscope](http://www.kaleidoscopeapp.com/) which has a pretty nice interface and makes the process almost painless. You can also resolve merge conflicts manually, but I wouldn't recommend it. For the following steps, I'll assume that you have installed Kaleidoscope and made it git's default diff and merge tool (see "File > Integration" in the app).
+
+Here's what git tells you when there's a merge conflict:
+    
+    Auto-merging index.markdown
+    CONFLICT (content): Merge conflict in index.markdown
+    Automatic merge failed; fix conflicts and then commit the result.
+
+Ok, maybe not that helpful. It's a good thing that you've got a tool prepared for just this sort of situation. Run `git mergetool` to launch Kaleidoscope and you'll see something like this:
+
+![Merging with Kaleidoscope](kaleidoscope-merge.jpg)
+
+  1. The left shows the "LOCAL" copy, which is probably going to be master.
+  2. The center pane is the final version. Whatever ends up here will live on; everything else will be lost.
+  3. The right shows the "REMOTE" copy, which is the branch you're taking content from.
+  4. If you just want to go block-by-block and choose one or the other, these buttons will help you either grab the left (master) version or the right version.
+  However, if you want to keep both, you can copy/paste from both sides into the center, and even add some text yourself if they need a little bit of contextual glue.
+  
+Once you're done, just save the file and close it. Git will notice that the conflicts have been resolved and it will stage (i.e. `git add`) the file again. You just have to commit the changes and then you can get on with your life.
 
 Related reading:
+
   * Pro Git: [Basic Merge Conflicts](http://git-scm.com/book/en/Git-Branching-Basic-Branching-and-Merging#Basic-Merge-Conflicts)
   * Blog: [Integrating Kaleidoscope With Git](http://blog.juerggutknecht.ch/integrating-kaleidoscope-with-git/)
 
@@ -181,9 +205,18 @@ Related reading:
 If you made a typo in your last commit message or forgot to add a file, you can use `git commit --amend` to go back and fix it. If you're comfortable with [interactive rebasing](http://git-scm.com/book/en/Git-Tools-Rewriting-History#Changing-Multiple-Commit-Messages) then you're welcome to use it, but it shouldn't be strictly necessary.
 
 Related reading:
-  
+
   * Atlassian: [Rewriting Git History](https://www.atlassian.com/git/tutorial/rewriting-git-history)
   * Pro Git: [Rewriting History](http://git-scm.com/book/en/Git-Tools-Rewriting-History)
 
+### Getting a Fresh Start
+
+If you've gotten yourself into such a jam that you just want to start with a fresh copy of upstream master, check out the master branch and then do `get fetch upstream` followed by `git reset --hard upstream/master`. **Warning**: this will **erase** any work that you have in the master branch that hasn't been pushed. Use it with care.
+
+### Fixing This Error: "fatal: 'upstream' does not appear to be a git repository"
+
+When you clone a repository, git creates a new remote for the source and calls it "origin." That means that there's no "upstream" remote by default. If you cloned puppetlabs/puppet-docs (and I'm pretty sure that you did), then you can rename origin to upstream with this command: `git remote rename origin upstream`. That should solve the problem.
+
 ### Basing Work on Content That's Still Being Updated
-### Rejected Commits
+
+On the PE side, writers often need to update existing documentation in place while preparing parallel versions of the same documents for the next release. Some of the in-place updates will be applicable to the future docs, but not all of them. The workflow that enables this process is explained in a separate document.
