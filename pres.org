@@ -1,0 +1,30 @@
+* Setup:
+** brew up a fancy new version of git
+** useful aliases
+*** standards: co, ci, st, br
+*** more interesting:
+    ls = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate
+    ll = log --pretty=format:"%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]" --decorate --numstat
+    graph = log --all --graph --decorate --oneline -n30
+    wdiff = diff --word-diff=color --ignore-space-at-eol --word-diff-regex='[[:alnum:]]+|[^[:space:][:alnum:]]+'
+** git up (git on up)
+** hub
+   https://github.com/github/hub
+** SSH keys
+* Repositories and their clones:
+** the clone command
+** everybody gets a repository
+** origin vs upstream
+** adding remotes
+** push, pull, fetch
+* Committing:
+** the commit command
+** the HEAD pointer
+* Branching and Checking Out:
+** the branch and checkout commands
+** branches are pointers
+* Merging:
+** the default merge strategies
+** rebasing
+** the dreaded merge conflict
+*** do not dread the merge conflict
