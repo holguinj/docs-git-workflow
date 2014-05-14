@@ -37,7 +37,9 @@ Keeping your local repository up to date is a must, and even though `git pull` i
 
 ### Install hub
 
-GitHub has a handy tool called [hub](https://github.com/github/hub) that wraps around the normal git program and provides some GitHub-specific functions. If you install it, you can use new commands like `git fork`, `git pull-request`. It also enables a general shorthand for GitHub repos, so that you can replace `git clone https://github.com/puppetlabs/puppet-docs` with `git clone puppetlabs/puppet-docs`.
+GitHub has a handy tool called [hub](https://github.com/github/hub) that wraps around the normal git program and provides some GitHub-specific functions. Once you install it, you can use new commands like `git fork`, `git pull-request`. It also enables a general shorthand for GitHub repos, so that you can replace `git clone https://github.com/puppetlabs/puppet-docs` with `git clone puppetlabs/puppet-docs`.
+
+Make sure to follow the instructions to [alias](https://github.com/github/hub#aliasing) `git` to `hub`.
 
 ### Helpful Aliases and Settings
 
@@ -176,7 +178,7 @@ When you're combining two branches with `git merge` or `git rebase`, git usually
 Merge conflicts are common enough that a number of tools have been developed just to resolve them. Some of us on the team use a commercial merge tool called [Kaleidoscope](http://www.kaleidoscopeapp.com/) which has a pretty nice interface and makes the process almost painless. You can also resolve merge conflicts manually, but I wouldn't recommend it. For the following steps, I'll assume that you have installed Kaleidoscope and made it git's default diff and merge tool (see "File > Integration" in the app).
 
 Here's what git tells you when there's a merge conflict:
-    
+
     Auto-merging index.markdown
     CONFLICT (content): Merge conflict in index.markdown
     Automatic merge failed; fix conflicts and then commit the result.
@@ -190,7 +192,7 @@ Ok, maybe not that helpful. It's a good thing that you've got a tool prepared fo
   3. The right shows the "REMOTE" copy, which is the branch you're taking content from.
   4. If you just want to go block-by-block and choose one or the other, these buttons will help you either grab the left (master) version or the right version.
   However, if you want to keep both, you can copy/paste from both sides into the center, and even add some text yourself if they need a little bit of contextual glue.
-  
+
 Once you're done, just save the file and close it. Git will notice that the conflicts have been resolved and it will stage (i.e. `git add`) the file again. You just have to commit the changes and then you can get on with your life.
 
 Related reading:
@@ -202,7 +204,7 @@ Related reading:
 
 **Important:** You can amend commits all you want *if and only if* those commits have not been pushed to puppetlabs/puppet-docs.
 
-If you made a typo in your last commit message or forgot to add a file, you can use `git commit --amend` to go back and fix it. If you're comfortable with [interactive rebasing](http://git-scm.com/book/en/Git-Tools-Rewriting-History#Changing-Multiple-Commit-Messages) then you're welcome to use it, but it shouldn't be strictly necessary.
+If you made a typo in your last commit message or forgot to add a file, you can use `git commit --amend` to open up your last commit message and fix it. If you're comfortable with [interactive rebasing](http://git-scm.com/book/en/Git-Tools-Rewriting-History#Changing-Multiple-Commit-Messages) then you're welcome to use it, but it shouldn't be strictly necessary.
 
 Related reading:
 
@@ -211,11 +213,11 @@ Related reading:
 
 ### Getting a Fresh Start
 
-If you've gotten yourself into such a jam that you just want to start with a fresh copy of upstream master, check out the master branch and then do `get fetch upstream` followed by `git reset --hard upstream/master`. **Warning**: this will **erase** any work that you have in the master branch that hasn't been pushed. Use it with care.
+If you've gotten yourself into such a jam that you just want to start with a fresh copy of upstream master, check out the master branch and then do `git fetch upstream` followed by `git reset --hard upstream/master`. **Warning**: this will **erase** any work that you have in the master branch that hasn't been pushed. Use it with care and as a last resort.
 
 ### Fixing This Error: "fatal: 'upstream' does not appear to be a git repository"
 
-When you clone a repository, git creates a new remote for the source and calls it "origin." That means that there's no "upstream" remote by default. If you cloned puppetlabs/puppet-docs (and I'm pretty sure that you did), then you can rename origin to upstream with this command: `git remote rename origin upstream`. That should solve the problem.
+When you clone a repository, git creates a new remote for the source and calls it "origin". That means that there's no "upstream" remote by default. If you cloned puppetlabs/puppet-docs (and I'm pretty sure that you did), then you can rename origin to upstream with this command: `git remote rename origin upstream`. That should solve the problem.
 
 ### Basing Work on Content That's Still Being Updated
 
