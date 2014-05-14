@@ -173,7 +173,7 @@ From time to time, you will inevitably find yourself in a shallow pit of git-rel
 
 ### Merge Conflicts
 
-When you're combining two branches with `git merge` or `git rebase`, git usually doesn't complain *unless* the branches have conflicting versions of one or more files. It's important to note that "conflicting" doesn't just mean "different," it means "different because of two (or more) divergent editing histories." In general, you get merge conflicts after two people have been editing the same file concurrently.
+When you're combining two branches with `git merge` or `git rebase`, git usually doesn't complain *unless* the branches have conflicting versions of one or more files. It's important to note that "conflicting" doesn't just mean "different," it means "can't be combined without losing changes." In general, you get merge conflicts after two people have been editing the same line(s) in the same file concurrently.
 
 Merge conflicts are common enough that a number of tools have been developed just to resolve them. Some of us on the team use a commercial merge tool called [Kaleidoscope](http://www.kaleidoscopeapp.com/) which has a pretty nice interface and makes the process almost painless. You can also resolve merge conflicts manually, but I wouldn't recommend it. For the following steps, I'll assume that you have installed Kaleidoscope and made it git's default diff and merge tool (see "File > Integration" in the app).
 
