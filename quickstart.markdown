@@ -2,7 +2,7 @@
 
 This document gives a quick tour of the [GitHub app](https://mac.github.com/release-notes.html) with the goal of quickly orienting people to the docs team's workflow. Even if you've never used git before, this guide should help you begin to make and publish changes to the site.
 
-That said, this is not a replacement for [workflow guide](workflow.markdown), which provides a much more comprehensive look at the process. The GUI app may be fast and convenient, but it hides most of what's really going on and using it is counter-productive if you want to really learn git.
+That said, this is not a replacement for the [workflow guide](workflow.markdown), which provides a much more comprehensive look at the process. The GUI app may be fast and convenient, but it hides most of what's really going on and using it is counter-productive if you want to really learn git.
 
 ## Setup
 
